@@ -12,6 +12,8 @@
         <module>MappingoGIS</module>
         <module>Portal</module>
         <module>MappingoREST</module>
+        <module>Utility</module>
+        <module>Manager</module>
     </modules>
 
 
