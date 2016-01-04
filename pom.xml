@@ -25,6 +25,8 @@
     </developers>
 
     <properties>  <!--为pom定义一些常量,在pom中的其它地方可以直接引用-->
+        <powermock.version>1.6.4</powermock.version>
+        <mockito.version>1.10.19</mockito.version>
         <spring.version>[3.2.12.RELEASE]</spring.version>
         <struts.version>2.3.4</struts.version>
         <hibernate.version>[4.2.16.Final]</hibernate.version>
@@ -47,7 +49,24 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
