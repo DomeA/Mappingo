@@ -14,6 +14,8 @@
         <module>MappingoREST</module>
         <module>Utility</module>
         <module>Manager</module>
+        <module>DTO</module>
+        <module>DataAccess</module>
     </modules>
 
     <developers>
@@ -28,14 +30,7 @@
         <powermock.version>1.6.4</powermock.version>
         <mockito.version>1.10.19</mockito.version>
         <spring.version>[3.2.12.RELEASE]</spring.version>
-        <struts.version>2.3.4</struts.version>
-        <hibernate.version>[4.2.16.Final]</hibernate.version>
-        <jersey.version>1.18</jersey.version>
-        <oracle.version>10.2.0.4.0</oracle.version>
-        <mysql.version>5.1.18</mysql.version>
         <aspectj.version>1.7.4</aspectj.version>
-        <org.apache.shiro.version>1.2.3</org.apache.shiro.version>
-        <matlab-javabuilder.version>2014a-win64</matlab-javabuilder.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <repositories>
