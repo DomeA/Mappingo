@@ -29,7 +29,7 @@
     <properties>  <!--为pom定义一些常量,在pom中的其它地方可以直接引用-->
         <powermock.version>1.6.4</powermock.version>
         <mockito.version>1.10.19</mockito.version>
-        <spring.version>[3.2.12.RELEASE]</spring.version>
+        <spring.version>[4.2.4.RELEASE]</spring.version>
         <aspectj.version>1.7.4</aspectj.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -181,6 +181,20 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc-portlet</artifactId>
             <version>${spring.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.8.2.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb-cross-store</artifactId>
+            <version>1.8.2.RELEASE</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

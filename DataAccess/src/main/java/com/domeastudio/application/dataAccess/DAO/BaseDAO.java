@@ -29,7 +29,7 @@ public class BaseDAO<T extends Serializable> {
 	@SuppressWarnings("rawtypes")
 	private Class entityClass;
 	//当前主键名称
-        private String pkname;
+	private String pkname;
 	private final String HQL_LIST_ALL;
 	private final String HQL_COUNT_ALL;
 	@SuppressWarnings("rawtypes")
