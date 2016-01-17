@@ -12,10 +12,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-//import java.util.ArrayList;
-//import org.hibernate.Transaction;
-
-
 /**
  * 基于hibernate的basedao
  * spring3对hibernate4已经没有了HibernateDaoSupport和HibernateTemplate的支持，使用了原生态的API

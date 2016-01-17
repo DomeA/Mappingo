@@ -12,7 +12,7 @@ import java.util.List;
  * @author DomeA
  */
 public class BaseService<T extends Serializable> {
-    protected BaseDAO<T> baseDAO;
+    private BaseDAO<T> baseDAO;
 
     public void save(T t) throws Exception {
         baseDAO.save(t);

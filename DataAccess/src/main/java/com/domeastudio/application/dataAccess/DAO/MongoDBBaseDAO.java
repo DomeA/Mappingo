@@ -15,7 +15,6 @@ import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
-import java.util.Map;
 import java.util.Set;
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +39,12 @@ public class MongoDBBaseDAO<T> {
         DB db = this.mongoTemplate.getDb();
         logger.info("db=" + db.toString());
     }
+
+    /**
+     * 保存大型文件
+     * @param file
+     * @param fileUrl
+     */
     public void saveFile(File file,String fileUrl){
         try {
             DB db = mongoTemplate.getDb();
@@ -94,16 +99,16 @@ public class MongoDBBaseDAO<T> {
     }
     /**
      * 统计查询后数据的总数
-     * @param params
+     * @param query
      * @return
      */
-    public long count(Map<String, Object> params){
-        Query query = new Query();
-        if ((params != null) && (!(params.isEmpty()))) {
-            for (String key : params.keySet()) {
-                query.addCriteria(new Criteria(key).is(params.get(key)));
-            }
-        }
+    public Long count(Query query){
+//        Query query = new Query();
+//        if ((params != null) && (!(params.isEmpty()))) {
+//            for (String key : params.keySet()) {
+//                query.addCriteria(new Criteria(key).is(params.get(key)));
+//            }
+//        }
         return (long)mongoTemplate.find(query, this.getEntityClass()).size();
     }
 
@@ -132,7 +137,6 @@ public class MongoDBBaseDAO<T> {
         mongoTemplate.save(t);
         return t;
     }
-    // 根据id删除对象
 
     /**
      * 根据id删除对象
@@ -281,7 +285,7 @@ public class MongoDBBaseDAO<T> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected Class<T> getEntityClass() {
+    private Class<T> getEntityClass() {
         return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 }
