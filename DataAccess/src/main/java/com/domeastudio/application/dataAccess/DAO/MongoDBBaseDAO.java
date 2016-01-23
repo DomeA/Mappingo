@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import java.io.IOException;
 /**
  * Created by domea on 16-1-16.
  */
-public class MongoDBBaseDAO<T> {
+public class MongoDBBaseDAO<T extends Serializable> {
     public static final Logger logger = LoggerFactory.getLogger(MongoDBBaseDAO.class);
 
     @Autowired

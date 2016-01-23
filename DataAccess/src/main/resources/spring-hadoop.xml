@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hadoop="http://www.springframework.org/schema/hadoop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/hadoop
+        http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+        http://www.springframework.org/schema/batch
+        http://www.springframework.org/schema/batch/spring-batch-2.2.xsd">
+
+    <hadoop:configuration>
+        fs.default.name=${fs.default.name}
+    </hadoop:configuration>
+
+    <context:property-placeholder location="classpath:hadoop.properties" />
+
+    <bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean" />
+    <bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+    <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher" p:jobRepository-ref="jobRepository" />
+
+    <bean id="etlDriver" class="com.etl.EtlChainDriver">
+    </bean>
+
+    <bean id="loadJob" class="oracle.hadoop.loader.OraLoader">
+    </bean>
+
+    <bean id="etlInitStepListener" class="com.etl.listener.EtlInitStepListener"/>
+    <bean id="etlJobListener" class="com.etl.listener.EtlJobListener"/>
+
+    <batch:job id="etlJob">
+        <batch:step id="initjs">
+            <hadoop:script-tasklet id="script-tasklet">
+                <hadoop:script language="javascript">
+                    importPackage(java.util);
+                    importPackage(java.lang);
+
+                    name = UUID.randomUUID().toString()
+                    System.out.println(name)
+                </hadoop:script>
+            </hadoop:script-tasklet>
+            <batch:next on="COMPLETED" to="etl" />
+            <batch:listeners>
+                <batch:listener ref="etlInitStepListener"></batch:listener>
+            </batch:listeners>
+        </batch:step>
+
+        <batch:step id="etl">
+            <!-- spring batch设置scope为step，表示生成step的时候才创建bean，因为这个时候jobParameters才传过来 -->
+            <hadoop:tool-tasklet id="tool-tasklet" tool-ref="etlDriver" scope="step">
+                <hadoop:arg value="#{jobParameters['etlinput']}" />
+                <hadoop:arg value="#{jobParameters['etloutput']}" />
+            </hadoop:tool-tasklet>
+        </batch:step>
+        <batch:listeners>
+            <batch:listener ref="etlJobListener"/>
+        </batch:listeners>
+    </batch:job>
+
+    <batch:job id="loadToOracle">
+        <batch:step id="loadStep">
+            <hadoop:tool-tasklet id="jar-tasklet" tool-ref="loadJob" scope="step">
+                <!-- properties -->
+                mapred.input.dir=#{jobParameters['mapred.input.dir']}
+                mapred.output.dir=#{jobParameters['mapred.output.dir']}
+                mapreduce.outputformat.class=#{jobParameters['mapreduce.outputformat.class']}
+                oracle.hadoop.loader.loaderMapFile=#{jobParameters['oracle.hadoop.loader.loaderMapFile']}
+                mapreduce.inputformat.class=#{jobParameters['mapreduce.inputformat.class']}
+                mapreduce.outputformat.class=#{jobParameters['mapreduce.outputformat.class']}
+                <!-- 这里必须硬编码\u0009（表示制表符），否则运行作业报没有fieldTerminator -->
+                oracle.hadoop.loader.input.fieldTerminator=\u0009
+                oracle.hadoop.loader.olhcachePath=#{jobParameters['oracle.hadoop.loader.olhcachePath']}
+                oracle.hadoop.loader.loadByPartition=#{jobParameters['oracle.hadoop.loader.loadByPartition']}
+                oracle.hadoop.loader.connection.url=#{jobParameters['oracle.hadoop.loader.connection.url']}
+                oracle.hadoop.loader.connection.user=#{jobParameters['oracle.hadoop.loader.connection.user']}
+                oracle.hadoop.loader.connection.password=#{jobParameters['oracle.hadoop.loader.connection.password']}
+            </hadoop:tool-tasklet>
+        </batch:step>
+    </batch:job>
+</beans>

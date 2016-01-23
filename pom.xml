@@ -198,5 +198,62 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-core</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-store</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-test</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-build-tests</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-hadoop-boot</artifactId>-->
+            <!--<version>2.3.0.RELEASE</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-config</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop-cluster-tests</artifactId>
+            <version>2.3.0.RELEASE</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>

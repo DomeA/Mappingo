@@ -11,5 +11,13 @@
 
     <artifactId>DTO</artifactId>
     <packaging>jar</packaging>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.domeastudio</groupId>
+            <artifactId>Utility</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

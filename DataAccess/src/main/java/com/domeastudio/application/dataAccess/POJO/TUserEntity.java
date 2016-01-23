@@ -4,13 +4,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Created by domea on 16-1-15.
  */
 @Entity
 @Table(name = "TUser", schema = "UserPermission", catalog = "")
-public class TUserEntity {
+public class TUserEntity implements Serializable {
     private String fuId;
     private String fuLoginName;
     private String fuPwd;
