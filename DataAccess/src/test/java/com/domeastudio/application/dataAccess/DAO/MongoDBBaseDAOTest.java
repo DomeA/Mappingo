@@ -18,8 +18,8 @@ import javax.annotation.Resource;
 @ContextConfiguration(locations={"classpath:spring-mongo.xml"})
 public class MongoDBBaseDAOTest {
 
-//    @Resource
-//    private MongoDBBaseDAO mongoDBBaseDAO;
+    //@Resource
+    //private MongoDBBaseDAO mongoDBBaseDAO;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
     }
