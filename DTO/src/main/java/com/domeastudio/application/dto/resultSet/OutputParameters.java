@@ -1,4 +1,4 @@
-package com.domeastudio.application.DTO.resultSet;
+package com.domeastudio.application.dto.resultSet;
 
 import com.domeastudio.mappingo.application.util.serialization.JacksonMapper;
 

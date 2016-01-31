@@ -1,7 +1,7 @@
-package com.domeastudio.application.DTO;
+package com.domeastudio.application.dto;
 
-import com.domeastudio.application.DTO.parameters.InputParameters;
-import com.domeastudio.application.DTO.resultSet.OutputParameters;
+import com.domeastudio.application.dto.parameters.InputParameters;
+import com.domeastudio.application.dto.resultSet.OutputParameters;
 
 import java.io.Serializable;
 

@@ -1,11 +1,12 @@
-package com.domeastudio.application.DTO.resultSet;
+package com.domeastudio.application.dto.resultSet;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by domea on 16-1-23.
  */
-public class MessageTemplate {
+public class MessageTemplate implements Serializable {
     private Date dateTime;
     private String logLevel;
     private String text;
