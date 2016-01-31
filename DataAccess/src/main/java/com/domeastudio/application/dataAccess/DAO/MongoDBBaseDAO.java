@@ -6,20 +6,26 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Type;
 import java.util.List;
+
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+
 import java.util.Set;
 import java.io.File;
 import java.io.IOException;
+
 /**
  * Created by domea on 16-1-16.
  */
@@ -29,7 +35,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
     @Autowired
     @Qualifier("mongoTemplate")
     private MongoTemplate mongoTemplate;
-    public static final String FILEURL="imgRespository";
+    public static final String FILEURL = "imgRespository";
 
     //当前泛型类
     @SuppressWarnings("rawtypes")
@@ -41,8 +47,8 @@ public class MongoDBBaseDAO<T extends Serializable> {
             ParameterizedType type1 = (ParameterizedType) type;
             Type[] types = type1.getActualTypeArguments();
             setEntityClass((Class<T>) types[0]);
-        }else{
-            type = ((Class)type).getGenericSuperclass();
+        } else {
+            type = ((Class) type).getGenericSuperclass();
             ParameterizedType type1 = (ParameterizedType) type;
             Type[] types = type1.getActualTypeArguments();
             setEntityClass((Class<T>) types[0]);
@@ -52,7 +58,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
     /**
      * DAO链接测试
      */
-    public void test(){
+    public void test() {
         Set<String> colls = this.mongoTemplate.getCollectionNames();
         for (String coll : colls) {
             logger.info("CollectionName=" + coll);
@@ -63,10 +69,11 @@ public class MongoDBBaseDAO<T extends Serializable> {
 
     /**
      * 保存大型文件
+     *
      * @param file
      * @param fileUrl
      */
-    public void saveFile(File file,String fileUrl){
+    public void saveFile(File file, String fileUrl) {
         try {
             DB db = mongoTemplate.getDb();
             GridFS fs = new GridFS(db, FILEURL);
@@ -75,17 +82,18 @@ public class MongoDBBaseDAO<T extends Serializable> {
             inputFile.setContentType(fileUrl.substring(fileUrl.lastIndexOf(".")));
             inputFile.save();
         } catch (IOException e) {
-            logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.saveFile:",e.getMessage());
+            logger.trace("MongoDBBaseDAO<" + getEntityClass().getSimpleName() + ">.saveFile:", e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
      * 检索gridFSDB文件
+     *
      * @param filename
      * @return
      */
-    public GridFSDBFile retrieveFileOne(String filename){
+    public GridFSDBFile retrieveFileOne(String filename) {
         try {
             DB db = mongoTemplate.getDb();
             // 获取fs的根节点
@@ -95,7 +103,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
                 return dbfile;
             }
         } catch (Exception e) {
-            logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.retrieveFileOne:",e.getMessage());
+            logger.trace("MongoDBBaseDAO<" + getEntityClass().getSimpleName() + ">.retrieveFileOne:", e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -103,9 +111,10 @@ public class MongoDBBaseDAO<T extends Serializable> {
 
     /**
      * 根据存储的对象创建集合
+     *
      * @param t
      */
-    public void createCollection(T t){
+    public void createCollection(T t) {
         if (!mongoTemplate.collectionExists(this.getEntityClass())) {
             mongoTemplate.createCollection(this.getEntityClass());
         }
@@ -113,86 +122,98 @@ public class MongoDBBaseDAO<T extends Serializable> {
 
     /**
      * 根据集合名称创建集合
+     *
      * @param collectionName
      */
-    public void createCollection(String collectionName){
+    public void createCollection(String collectionName) {
         if (!mongoTemplate.collectionExists(collectionName)) {
             mongoTemplate.createCollection(collectionName);
         }
     }
+
     /**
      * 统计查询后数据的总数
+     *
      * @param query
      * @return
      */
-    public Long count(Query query){
+    public Long count(Query query) {
 //        Query query = new Query();
 //        if ((params != null) && (!(params.isEmpty()))) {
 //            for (String key : params.keySet()) {
 //                query.addCriteria(new Criteria(key).is(params.get(key)));
 //            }
 //        }
-        return (long)mongoTemplate.find(query, this.getEntityClass()).size();
+        return (long) mongoTemplate.find(query, this.getEntityClass()).size();
     }
 
     /**
      * 插入对象到mongodb中
+     *
      * @param t
      */
-    public void insert(T t){
+    public void insert(T t) {
         mongoTemplate.insert(t);
     }
 
     /**
      * 插入对象到mongodb中,并且指定了集合名(表的意思)
+     *
      * @param t
      * @param collectionName
      */
-    public void insert(T t,String collectionName){
-        mongoTemplate.insert(t,collectionName);
+    public void insert(T t, String collectionName) {
+        mongoTemplate.insert(t, collectionName);
     }
+
     /**
      * 保存对象到mongodb中
+     *
      * @param t
      * @return
      */
-    public T save(T t){
+    public T save(T t) {
         mongoTemplate.save(t);
         return t;
     }
 
     /**
      * 根据id删除对象
+     *
      * @param t
      */
-    public void deleteById(T t){
+    public void deleteById(T t) {
         Query query = buildBaseQuery(t);
         mongoTemplate.remove(query, this.getEntityClass());
     }
+
     /**
      * 根据对象的属性删除
+     *
      * @param t
      */
-    public void deleteByCondition(T t){
+    public void deleteByCondition(T t) {
         Query query = buildBaseQuery(t);
         mongoTemplate.remove(query, this.getEntityClass());
     }
 
     /**
      * 通过条件查询更新数据
+     *
      * @param query
      * @param update
      */
-    public void update(Query query, Update update){
+    public void update(Query query, Update update) {
         mongoTemplate.updateMulti(query, update, this.getEntityClass());
     }
 
     /**
      * 根据id进行更新
+     *
      * @param id
      * @param t
      */
-    public void updateById(String id, T t){
+    public void updateById(String id, T t) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
         Update update = buildBaseUpdate(t);
@@ -201,61 +222,68 @@ public class MongoDBBaseDAO<T extends Serializable> {
 
     /**
      * 通过条件查询实体(集合)
+     *
      * @param query
      * @return
      */
-    public List<T> find(Query query){
+    public List<T> find(Query query) {
         return mongoTemplate.find(query, this.getEntityClass());
     }
 
     /**
-     *根据对象的属性查询实体(集合)
+     * 根据对象的属性查询实体(集合)
+     *
      * @param t
      * @return
      */
-    public List<T> findByCondition(T t){
+    public List<T> findByCondition(T t) {
         Query query = buildBaseQuery(t);
         return mongoTemplate.find(query, this.getEntityClass());
     }
 
     /**
      * 通过一定的条件查询一个实体
+     *
      * @param query
      * @return
      */
-    public T findOne(Query query){
+    public T findOne(Query query) {
         return mongoTemplate.findOne(query, this.getEntityClass());
     }
 
     /**
      * 通过id获取记录
+     *
      * @param id
      * @return
      */
-    public T get(String id){
+    public T get(String id) {
         return mongoTemplate.findById(id, this.getEntityClass());
     }
 
     /**
      * 通过id获取记录,并且指定了集合名(表的意思)
+     *
      * @param id
      * @param collectionName
      * @return
      */
-    public T get(String id, String collectionName){
+    public T get(String id, String collectionName) {
         return mongoTemplate.findById(id, this.getEntityClass(), collectionName);
     }
 
     /**
      * 获取Mongo数据库模板
+     *
      * @return
      */
-    public MongoTemplate getMongoTemplate(){
+    public MongoTemplate getMongoTemplate() {
         return mongoTemplate;
     }
 
     /**
      * 根据vo构建查询条件query
+     *
      * @param t
      * @return
      */
@@ -274,17 +302,19 @@ public class MongoDBBaseDAO<T extends Serializable> {
                     }
                 }
             } catch (IllegalArgumentException e) {
-                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseQuery:",e.getMessage());
+                logger.trace("MongoDBBaseDAO<" + getEntityClass().getSimpleName() + ">.buildBaseQuery:", e.getMessage());
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
-                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseQuery:",e.getMessage());
+                logger.trace("MongoDBBaseDAO<" + getEntityClass().getSimpleName() + ">.buildBaseQuery:", e.getMessage());
                 e.printStackTrace();
             }
         }
         return query;
     }
+
     /**
      * 根据vo构建更新条件update
+     *
      * @param t
      * @return
      */
@@ -300,7 +330,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
                     update.set(field.getName(), value);
                 }
             } catch (Exception e) {
-                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseUpdate:",e.getMessage());
+                logger.trace("MongoDBBaseDAO<" + getEntityClass().getSimpleName() + ">.buildBaseUpdate:", e.getMessage());
                 e.printStackTrace();
             }
         }
