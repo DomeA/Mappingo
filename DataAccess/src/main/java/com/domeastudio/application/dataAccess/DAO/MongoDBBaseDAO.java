@@ -6,12 +6,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.lang.reflect.Type;
 import java.util.List;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
@@ -24,12 +24,31 @@ import java.io.IOException;
  * Created by domea on 16-1-16.
  */
 public class MongoDBBaseDAO<T extends Serializable> {
-    public static final Logger logger = LoggerFactory.getLogger(MongoDBBaseDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(MongoDBBaseDAO.class);
 
     @Autowired
     @Qualifier("mongoTemplate")
-    protected MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
     public static final String FILEURL="imgRespository";
+
+    //当前泛型类
+    @SuppressWarnings("rawtypes")
+    private Class<T> entityClass;
+
+    public MongoDBBaseDAO() {
+        Type type = this.getClass().getGenericSuperclass();
+        if (type.toString().indexOf("MongoDBBaseDAO") != -1) {
+            ParameterizedType type1 = (ParameterizedType) type;
+            Type[] types = type1.getActualTypeArguments();
+            setEntityClass((Class<T>) types[0]);
+        }else{
+            type = ((Class)type).getGenericSuperclass();
+            ParameterizedType type1 = (ParameterizedType) type;
+            Type[] types = type1.getActualTypeArguments();
+            setEntityClass((Class<T>) types[0]);
+        }
+    }
+
     /**
      * DAO链接测试
      */
@@ -56,6 +75,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
             inputFile.setContentType(fileUrl.substring(fileUrl.lastIndexOf(".")));
             inputFile.save();
         } catch (IOException e) {
+            logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.saveFile:",e.getMessage());
             e.printStackTrace();
         }
     }
@@ -75,6 +95,7 @@ public class MongoDBBaseDAO<T extends Serializable> {
                 return dbfile;
             }
         } catch (Exception e) {
+            logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.retrieveFileOne:",e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -249,12 +270,14 @@ public class MongoDBBaseDAO<T extends Serializable> {
                 if (value != null) {
                     QueryField queryfield = field.getAnnotation(QueryField.class);
                     if (queryfield != null) {
-                        query.addCriteria(queryfield.type().buildcriteria(queryfield, field, value));
+                        query.addCriteria(queryfield.type().buildCriteria(queryfield, field, value));
                     }
                 }
             } catch (IllegalArgumentException e) {
+                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseQuery:",e.getMessage());
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
+                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseQuery:",e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -277,17 +300,26 @@ public class MongoDBBaseDAO<T extends Serializable> {
                     update.set(field.getName(), value);
                 }
             } catch (Exception e) {
+                logger.trace("MongoDBBaseDAO<"+getEntityClass().getSimpleName()+">.buildBaseUpdate:",e.getMessage());
                 e.printStackTrace();
             }
         }
         return update;
     }
+
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
     /**
      * 获取需要操作的实体类class
      * @return
      */
-    @SuppressWarnings("unchecked")
-    private Class<T> getEntityClass() {
-        return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
-    }
+//    @SuppressWarnings("unchecked")
+//    private Class<T> getEntityClass() {
+//        return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+//    }
 }

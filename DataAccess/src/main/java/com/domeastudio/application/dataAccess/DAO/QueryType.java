@@ -16,43 +16,43 @@ import java.util.List;
 public enum QueryType {
     equals {
         @Override
-        public Criteria buildcriteria(QueryField queryfieldannotation, Field field, Object value) {
-            if (check(queryfieldannotation, field, value)) {
-                String queryfield = getqueryfieldname(queryfieldannotation, field);
-                return Criteria.where(queryfield).is(value.toString());
+        public Criteria buildCriteria(QueryField queryFieldAnnotation, Field field, Object value) {
+            if (check(queryFieldAnnotation, field, value)) {
+                String queryField = getQueryFieldName(queryFieldAnnotation, field);
+                return Criteria.where(queryField).is(value.toString());
             }
             return new Criteria();
         }
     },
     like {
         @Override
-        public Criteria buildcriteria(QueryField queryfieldannotation, Field field, Object value) {
-            if (check(queryfieldannotation, field, value)) {
-                String queryfield = getqueryfieldname(queryfieldannotation, field);
-                return Criteria.where(queryfield).regex(value.toString());
+        public Criteria buildCriteria(QueryField queryFieldAnnotation, Field field, Object value) {
+            if (check(queryFieldAnnotation, field, value)) {
+                String queryField = getQueryFieldName(queryFieldAnnotation, field);
+                return Criteria.where(queryField).regex(value.toString());
             }
             return new Criteria();
         }
     },
     in {
         @Override
-        public Criteria buildcriteria(QueryField queryfieldannotation, Field field, Object value) {
-            if (check(queryfieldannotation, field, value)) {
+        public Criteria buildCriteria(QueryField queryFieldAnnotation, Field field, Object value) {
+            if (check(queryFieldAnnotation, field, value)) {
                 if (value instanceof List) {
-                    String queryfield = getqueryfieldname(queryfieldannotation, field);
+                    String queryField = getQueryFieldName(queryFieldAnnotation, field);
                     // 此处必须转型为list，否则会在in外面多一层[]
-                    return Criteria.where(queryfield).in((List<?>) value);
+                    return Criteria.where(queryField).in((List<?>) value);
                 }
             }
             return new Criteria();
         }
     };
 
-    private static boolean check(QueryField queryfield, Field field, Object value) {
-        return !(queryfield == null || field == null || value == null);
+    private static boolean check(QueryField queryField, Field field, Object value) {
+        return !(queryField == null || field == null || value == null);
     }
 
-    public abstract Criteria buildcriteria(QueryField queryfieldannotation, Field field, Object value);
+    public abstract Criteria buildCriteria(QueryField queryFieldAnnotation, Field field, Object value);
 
 
     /**
@@ -61,11 +61,11 @@ public enum QueryType {
      * @param field
      * @return
      */
-    private static String getqueryfieldname(QueryField queryfield, Field field) {
-        String queryfieldvalue = queryfield.attribute();
-        if (!StringUtils.hasText(queryfieldvalue)) {
-            queryfieldvalue = field.getName();
+    private static String getQueryFieldName(QueryField queryField, Field field) {
+        String queryFieldValue = queryField.attribute();
+        if (!StringUtils.hasText(queryFieldValue)) {
+            queryFieldValue = field.getName();
         }
-        return queryfieldvalue;
+        return queryFieldValue;
     }
 }

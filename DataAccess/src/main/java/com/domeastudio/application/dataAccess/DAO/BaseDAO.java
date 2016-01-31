@@ -3,6 +3,8 @@ package com.domeastudio.application.dataAccess.DAO;
 
 import org.hibernate.*;
 import org.hibernate.criterion.Example;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Id;
@@ -19,6 +21,8 @@ import java.util.List;
  * @param <T>
  */
 public class BaseDAO<T extends Serializable> {
+	private static final Logger logger = LoggerFactory.getLogger(BaseDAO.class);
+
 	@Autowired
 	private SessionFactory sessionFactory;
 	//当前泛型类
