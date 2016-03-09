@@ -47,7 +47,7 @@ public class BaseDAO<T extends Serializable> {
     public BaseDAO() {
         //获取当前泛型类
         Type type = this.getClass().getGenericSuperclass();
-        System.out.println("===>this is BaseDao类=> 当前泛型类:Type=" + type);
+        System.out.println("===>this is BaseDao类=>当前泛型类:Type=" + type);
         logger.info("===>this is BaseDao类=> 当前泛型类:Type=" + type);
         if (type.toString().indexOf("BaseDAO") != -1) {
             ParameterizedType type1 = (ParameterizedType) type;
