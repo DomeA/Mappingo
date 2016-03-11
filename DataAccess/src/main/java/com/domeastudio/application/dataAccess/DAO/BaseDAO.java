@@ -389,7 +389,6 @@ public class BaseDAO<T extends Serializable> {
         return list;
     }
 
-
     /**
      * SQL查询（SQL语句查询）
      *
